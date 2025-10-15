@@ -6,7 +6,7 @@ build/
 .run/
 .intellijPlatform/
 .tmp/
-cashes/
+caches/
 daemon/
 notifications/
 native/
