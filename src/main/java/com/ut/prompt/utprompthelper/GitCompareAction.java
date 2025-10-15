@@ -78,7 +78,12 @@ public class GitCompareAction extends AnAction {
                     inHunk = false;
                     hunkLines.clear();
                 } else if (line.startsWith("@@") && !skipFile && currentFile != null) {
-                    // 解析行数范围
+                    // 遇到新的hunk，先处理当前hunk
+                    if (inHunk && !hunkLines.isEmpty()) {
+                        processHunk(currentFile, hunkStart, hunkLinesCount, hunkLines, fileChanges);
+                        hunkLines.clear();
+                    }
+                    // 然后开始新的hunk
                     String[] parts = line.split(" ");
                     if (parts.length >= 3) {
                         String newRange = parts[2].substring(1); // 移除"+"前缀
@@ -96,24 +101,6 @@ public class GitCompareAction extends AnAction {
                 } else if (inHunk && line.startsWith(" ") && !skipFile && currentFile != null) {
                     // 上下文行，继续处理但不结束hunk
                     // 只有在遇到新的@@时才结束当前hunk
-                } else if (inHunk && line.startsWith("@@") && !skipFile && currentFile != null) {
-                    // 遇到新的hunk，先处理当前hunk
-                    if (!hunkLines.isEmpty()) {
-                        processHunk(currentFile, hunkStart, hunkLinesCount, hunkLines, fileChanges);
-                        hunkLines.clear();
-                    }
-                    // 然后开始新的hunk
-                    String[] parts = line.split(" ");
-                    if (parts.length >= 3) {
-                        String newRange = parts[2].substring(1); // 移除"+"前缀
-                        String[] rangeParts = newRange.split(",");
-                        hunkStart = Integer.parseInt(rangeParts[0]);
-                        hunkLinesCount = 1;
-                        if (rangeParts.length > 1) {
-                            hunkLinesCount = Integer.parseInt(rangeParts[1]);
-                        }
-                        hunkLines.clear();
-                    }
                 }
             }
             
