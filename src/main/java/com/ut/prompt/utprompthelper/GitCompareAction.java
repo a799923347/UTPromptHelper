@@ -94,12 +94,26 @@ public class GitCompareAction extends AnAction {
                 } else if (inHunk && (line.startsWith("+") || line.startsWith("-")) && !skipFile && currentFile != null) {
                     hunkLines.add(line);
                 } else if (inHunk && line.startsWith(" ") && !skipFile && currentFile != null) {
-                    // 上下文行，结束当前hunk
+                    // 上下文行，继续处理但不结束hunk
+                    // 只有在遇到新的@@时才结束当前hunk
+                } else if (inHunk && line.startsWith("@@") && !skipFile && currentFile != null) {
+                    // 遇到新的hunk，先处理当前hunk
                     if (!hunkLines.isEmpty()) {
                         processHunk(currentFile, hunkStart, hunkLinesCount, hunkLines, fileChanges);
                         hunkLines.clear();
                     }
-                    inHunk = false;
+                    // 然后开始新的hunk
+                    String[] parts = line.split(" ");
+                    if (parts.length >= 3) {
+                        String newRange = parts[2].substring(1); // 移除"+"前缀
+                        String[] rangeParts = newRange.split(",");
+                        hunkStart = Integer.parseInt(rangeParts[0]);
+                        hunkLinesCount = 1;
+                        if (rangeParts.length > 1) {
+                            hunkLinesCount = Integer.parseInt(rangeParts[1]);
+                        }
+                        hunkLines.clear();
+                    }
                 }
             }
             
@@ -120,19 +134,22 @@ public class GitCompareAction extends AnAction {
     }
 
     private void processHunk(String fileName, int hunkStart, int hunkLinesCount, List<String> hunkLines, Map<String, List<String>> fileChanges) {
-        // 检查hunk中是否只有导入语句、注释等非核心变更
+        // 检查hunk中是否包含重要的代码变更
         boolean hasSignificantChanges = false;
+        int significantLines = 0;
+        int totalLines = hunkLines.size();
         
         for (String line : hunkLines) {
             String content = line.substring(1).trim(); // 移除+或-前缀
             if (!isImportOrComment(content)) {
                 hasSignificantChanges = true;
-                break;
+                significantLines++;
             }
         }
         
-        // 只有当hunk包含重要变更时才记录
-        if (hasSignificantChanges) {
+        // 如果hunk包含重要变更，或者重要代码行数占总行数的比例较高，则记录
+        // 这样可以捕获包含注释但仍有重要代码变更的hunk
+        if (hasSignificantChanges && (significantLines > 0 && (totalLines <= 3 || significantLines >= totalLines * 0.3))) {
             int end = hunkStart + hunkLinesCount - 1;
             String changeInfo = hunkStart + "-" + end;
             fileChanges.computeIfAbsent(fileName, k -> new ArrayList<>()).add(changeInfo);
@@ -195,7 +212,7 @@ public class GitCompareAction extends AnAction {
             private final Map<String, JCheckBox> checkBoxMap = new HashMap<>();
             private final JTextArea previewArea = new JTextArea(10, 50);
             private final JTextArea promptTextArea = new JTextArea(3, 50);
-            private final String defaultPrompt = "基于当前代码库的单测代码风格 生成单测 优先创建新的测试类 要求要覆盖所有改动到的代码 优先使用MockitoJUnitRunner 必要时再使用PowerMockRunner 必要时才mock静态方法 单测生成后检查下编译报错和运行通过情况 有的话进行修复 需要覆盖的代码如下";
+            private final String defaultPrompt = "基于代码库的现有单元测试风格，为以下变更生成单元测试，具体要求：\n测试覆盖：确保测试覆盖所有变更的代码行，包括边界条件和异常场景。\n测试类创建：优先创建新的测试类（如果尚未存在），保持与生产代码的包结构一致（例如测试类放在 src/test/java对应包下）。\n测试运行器：优先使用 MockitoJUnitRunner进行依赖mock和测试执行。仅在必要时（如无法通过Mockito处理静态方法或final类时）才使用 PowerMockRunner。\nMock策略：避免过度mock；只在必要时mock静态方法或复杂依赖。使用Mockito进行对象mock，保持测试简洁。\n验证与修复：生成测试代码后，自动检查编译错误和运行通过情况（例如通过IDE或构建工具验证），如有问题（如缺少依赖或语法错误），进行修复以确保测试可运行。\n代码风格：遵循代码库现有的测试命名约定（如类名以 Test结尾）、断言风格（如使用AssertJ或JUnit断言）和结构（如使用 @Before初始化）。\n需要覆盖的代码如下：";
             
             {
                 setTitle("Git Compare Results - 按文件汇总");
