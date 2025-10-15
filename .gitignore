@@ -8,6 +8,9 @@ build/
 .tmp/
 cashes/
 daemon/
+notifications/
+native/
+META-INF/
 
 ### IntelliJ IDEA ###
 .idea/
