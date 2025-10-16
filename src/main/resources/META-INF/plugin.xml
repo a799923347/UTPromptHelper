@@ -31,5 +31,9 @@
     <action id="GitCompareAction" class="com.ut.prompt.utprompthelper.GitCompareAction" text="获取UT提示词" description="比较当前分支与master改动并获取用于AI生成单元测试的提示词">
       <add-to-group group-id="ToolsMenu" anchor="first"/>
     </action>
+    
+    <action id="FileBasedPromptAction" class="com.ut.prompt.utprompthelper.FileBasedPromptAction" text="生成UT提示词" description="为当前文件生成单元测试提示词">
+      <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="Cut"/>
+    </action>
   </actions>
 </idea-plugin>
