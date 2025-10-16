@@ -8,13 +8,40 @@
   <name>UTPromptHelper</name>
 
   <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-  <vendor url="https://www.yourcompany.com">YourCompany</vendor>
+  <vendor url="https://github.com/UTPromptHelper">UTPromptHelper Team</vendor>
 
   <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
        Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
   <description><![CDATA[
-        Enter short description for your plugin here.<br>
-        <em>most HTML tags may be used</em>
+        <h3>🚀 UTPromptHelper - 智能单元测试提示词生成工具</h3>
+        
+        <p>UTPromptHelper 是一个专为 IntelliJ IDEA 设计的插件，通过分析 Git 代码变更自动生成高质量的单元测试提示词，帮助开发者快速为代码变更生成完整的单元测试。</p>
+        
+        <h4>✨ 主要功能</h4>
+        <ul>
+          <li>🔍 <strong>智能代码变更检测</strong>：自动识别 Git 分支间的代码变更</li>
+          <li>📝 <strong>可编辑提示词模板</strong>：提供专业的测试生成提示词模板</li>
+          <li>🎯 <strong>文件选择功能</strong>：支持选择性生成特定文件的测试</li>
+          <li>🖱️ <strong>右键菜单支持</strong>：在文件上右键即可快速生成UT提示词</li>
+          <li>👁️ <strong>实时预览</strong>：实时预览将要复制的内容</li>
+          <li>📋 <strong>一键复制</strong>：快速复制提示词到剪贴板</li>
+          <li>🚀 <strong>Cursor 集成</strong>：直接在 Cursor 编辑器中打开项目</li>
+        </ul>
+        
+        <h4>🎮 使用方式</h4>
+        <p><strong>方式一：Tools 菜单</strong> - 选择 Tools → 获取UT提示词，分析整个项目的变更</p>
+        <p><strong>方式二：右键菜单</strong> - 在文件上右键选择"生成UT提示词"，快速分析单个文件</p>
+        
+        <h4>🔧 技术特性</h4>
+        <ul>
+          <li>智能解析 Git diff 输出</li>
+          <li>准确识别包含注释的重要代码变更</li>
+          <li>支持多 hunk 文件处理</li>
+          <li>过滤导入语句和纯注释变更</li>
+          <li>跨平台支持（macOS、Windows、Linux）</li>
+        </ul>
+        
+        <p><em>让单元测试生成变得简单高效！</em></p>
     ]]></description>
 
   <!-- Product and plugin compatibility requirements.
