@@ -194,6 +194,10 @@ public class GitCompareAction extends AnAction {
         );
     }
 
+
+
+
+
     private void showResultsDialog(Project project, Map<String, List<String>> fileChanges) {
         DialogWrapper dialog = new DialogWrapper(project) {
             private final Map<String, JCheckBox> checkBoxMap = new HashMap<>();
