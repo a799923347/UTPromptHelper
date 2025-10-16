@@ -33,7 +33,7 @@
     </action>
     
     <action id="FileBasedPromptAction" class="com.ut.prompt.utprompthelper.FileBasedPromptAction" text="生成UT提示词" description="为当前文件生成单元测试提示词">
-      <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="Cut"/>
+      <add-to-group group-id="EditorPopupMenu" anchor="first"/>
     </action>
   </actions>
 </idea-plugin>
