@@ -8,7 +8,7 @@
   <name>UTPromptHelper</name>
 
   <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-  <vendor url="https://github.com/UTPromptHelper">UTPromptHelper Team</vendor>
+  <vendor url="https://github.com/a799923347/UTPromptHelper">UTPromptHelper Team</vendor>
 
   <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
        Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
