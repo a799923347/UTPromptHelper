@@ -10,38 +10,45 @@
   <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
   <vendor url="https://github.com/a799923347/UTPromptHelper">UTPromptHelper Team</vendor>
 
+  <!-- Version of the plugin. It should be in the format "major.minor.patch" -->
+  <version>2.4.0</version>
+
+  <!-- Product and plugin compatibility requirements.
+       Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+  <idea-version since-build="201.0" until-build="241.*"/>
+
   <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
        Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
   <description><![CDATA[
-        <h3>🚀 UTPromptHelper - 智能单元测试提示词生成工具</h3>
+        <h3>UTPromptHelper - Smart Unit Test Prompt Generator</h3>
         
-        <p>UTPromptHelper 是一个专为 IntelliJ IDEA 设计的插件，通过分析 Git 代码变更自动生成高质量的单元测试提示词，帮助开发者快速为代码变更生成完整的单元测试。</p>
+        <p>UTPromptHelper is a powerful IntelliJ IDEA plugin designed to automatically generate high-quality unit test prompts by analyzing Git code changes. It helps developers quickly create comprehensive unit tests for their code modifications.</p>
         
-        <h4>✨ 主要功能</h4>
+        <h4>Key Features</h4>
         <ul>
-          <li>🔍 <strong>智能代码变更检测</strong>：自动识别 Git 分支间的代码变更</li>
-          <li>📝 <strong>可编辑提示词模板</strong>：提供专业的测试生成提示词模板</li>
-          <li>🎯 <strong>文件选择功能</strong>：支持选择性生成特定文件的测试</li>
-          <li>🖱️ <strong>右键菜单支持</strong>：在文件上右键即可快速生成UT提示词</li>
-          <li>👁️ <strong>实时预览</strong>：实时预览将要复制的内容</li>
-          <li>📋 <strong>一键复制</strong>：快速复制提示词到剪贴板</li>
-          <li>🚀 <strong>Cursor 集成</strong>：直接在 Cursor 编辑器中打开项目</li>
+          <li><strong>Smart Code Change Detection</strong>: Automatically identifies code changes between Git branches</li>
+          <li><strong>Editable Prompt Templates</strong>: Provides professional test generation prompt templates</li>
+          <li><strong>File Selection</strong>: Supports selective test generation for specific files</li>
+          <li><strong>Right-click Menu Support</strong>: Generate UT prompts with a simple right-click on files</li>
+          <li><strong>Real-time Preview</strong>: Preview content before copying</li>
+          <li><strong>One-click Copy</strong>: Quickly copy prompts to clipboard</li>
+          <li><strong>Cursor Integration</strong>: Open projects directly in Cursor editor</li>
         </ul>
         
-        <h4>🎮 使用方式</h4>
-        <p><strong>方式一：Tools 菜单</strong> - 选择 Tools → 获取UT提示词，分析整个项目的变更</p>
-        <p><strong>方式二：右键菜单</strong> - 在文件上右键选择"生成UT提示词"，快速分析单个文件</p>
+        <h4>Usage Methods</h4>
+        <p><strong>Method 1: Tools Menu</strong> - Select Tools → Get UT Prompts to analyze entire project changes</p>
+        <p><strong>Method 2: Right-click Menu</strong> - Right-click on files and select "Generate UT Prompts" for quick single-file analysis</p>
         
-        <h4>🔧 技术特性</h4>
+        <h4>Technical Features</h4>
         <ul>
-          <li>智能解析 Git diff 输出</li>
-          <li>准确识别包含注释的重要代码变更</li>
-          <li>支持多 hunk 文件处理</li>
-          <li>过滤导入语句和纯注释变更</li>
-          <li>跨平台支持（macOS、Windows、Linux）</li>
+          <li>Intelligent Git diff output parsing</li>
+          <li>Accurate identification of important code changes with comments</li>
+          <li>Multi-hunk file processing support</li>
+          <li>Import statement and pure comment change filtering</li>
+          <li>Cross-platform support (macOS, Windows, Linux)</li>
         </ul>
         
-        <p><em>让单元测试生成变得简单高效！</em></p>
+        <p><em>Make unit test generation simple and efficient!</em></p>
     ]]></description>
 
   <!-- Product and plugin compatibility requirements.
