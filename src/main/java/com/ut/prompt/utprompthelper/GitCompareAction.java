@@ -199,7 +199,7 @@ public class GitCompareAction extends AnAction {
             private final Map<String, JCheckBox> checkBoxMap = new HashMap<>();
             private final JTextArea previewArea = new JTextArea(10, 50);
             private final JTextArea promptTextArea = new JTextArea(3, 50);
-            private final String defaultPrompt = "基于代码库的现有单元测试风格，为以下变更生成单元测试，具体要求：\n测试覆盖：确保测试覆盖所有变更的代码行，包括边界条件和异常场景。\n测试类创建：优先创建新的测试类，保持与生产代码的包结构一致（例如测试类放在 src/test/java对应包下）。\n测试运行器：优先使用 MockitoJUnitRunner进行依赖mock和测试执行。仅在必要时（如无法通过Mockito处理静态方法或final类时）才使用 PowerMockRunner。\nMock策略：避免过度mock；只在必要时mock静态方法或复杂依赖。使用Mockito进行对象mock，保持测试简洁。\n验证与修复：生成测试代码后，自动检查编译错误和运行通过情况（例如通过IDE或构建工具验证），如有问题（如缺少依赖或语法错误），进行修复以确保测试可运行。\n代码风格：遵循代码库现有的测试命名约定（如类名以 Test结尾）、断言风格（如使用AssertJ或JUnit断言）和结构（如使用 @Before初始化）。\n需要覆盖的代码如下：";
+            private final SimplePromptConfig config = SimplePromptConfig.getInstance();
             
             {
                 setTitle("UT提示词助手");
@@ -306,12 +306,30 @@ public class GitCompareAction extends AnAction {
                 JPanel promptPanel = new JPanel(new BorderLayout());
                 promptPanel.setBorder(BorderFactory.createTitledBorder("UT提示词 (可编辑)"));
                 
-                promptTextArea.setText(defaultPrompt);
+                // 设置初始提示词
+                promptTextArea.setText(config.getEffectivePrompt());
                 promptTextArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
                 promptTextArea.setLineWrap(true);
                 promptTextArea.setWrapStyleWord(true);
                 JScrollPane promptScrollPane = new JScrollPane(promptTextArea);
                 promptScrollPane.setPreferredSize(new Dimension(600, 80));
+                
+                // 创建提示词按钮面板
+                JPanel promptButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                JButton savePromptBtn = new JButton("💾 保存提示词");
+                JButton resetPromptBtn = new JButton("🔄 重置为默认");
+                JButton loadPromptBtn = new JButton("📂 重新加载提示词");
+                
+                promptButtonPanel.add(savePromptBtn);
+                promptButtonPanel.add(resetPromptBtn);
+                promptButtonPanel.add(loadPromptBtn);
+                
+                // 按钮事件处理
+                savePromptBtn.addActionListener(e -> savePrompt());
+                resetPromptBtn.addActionListener(e -> resetPrompt());
+                loadPromptBtn.addActionListener(e -> loadPrompt());
+                
+                promptPanel.add(promptButtonPanel, BorderLayout.NORTH);
                 promptPanel.add(promptScrollPane, BorderLayout.CENTER);
                 
                 // 创建预览区域
@@ -389,6 +407,45 @@ public class GitCompareAction extends AnAction {
                 clipboard.setContents(selection, null);
                 
                 JOptionPane.showMessageDialog(null, "内容已复制到剪贴板！", "成功", JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+            private void savePrompt() {
+                String currentPrompt = promptTextArea.getText().trim();
+                if (currentPrompt.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "提示词不能为空！", "警告", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                
+                config.setCustomPrompt(currentPrompt);
+                config.setUseCustomPrompt(true);
+                
+                JOptionPane.showMessageDialog(null, "提示词已保存！", "成功", JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+            private void resetPrompt() {
+                int result = JOptionPane.showConfirmDialog(
+                    null, 
+                    "确定要重置为默认提示词吗？这将覆盖当前的编辑内容。", 
+                    "确认重置", 
+                    JOptionPane.YES_NO_OPTION
+                );
+                
+                if (result == JOptionPane.YES_OPTION) {
+                    config.resetToDefault();
+                    promptTextArea.setText(SimplePromptConfig.DEFAULT_PROMPT);
+                    updatePreview();
+                    JOptionPane.showMessageDialog(null, "已重置为默认提示词！", "成功", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+            
+            private void loadPrompt() {
+                if (config.isUseCustomPrompt() && !config.getCustomPrompt().trim().isEmpty()) {
+                    promptTextArea.setText(config.getCustomPrompt());
+                    updatePreview();
+                    JOptionPane.showMessageDialog(null, "已加载保存的提示词！", "成功", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "没有找到保存的提示词！", "提示", JOptionPane.INFORMATION_MESSAGE);
+                }
             }
             
             private void openInCursor() {

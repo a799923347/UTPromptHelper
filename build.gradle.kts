@@ -12,12 +12,19 @@ repositories {
     maven {
         url = uri("https://maven.aliyun.com/repository/public")
     }
+    maven {
+        url = uri("https://repo1.maven.org/maven2")
+    }
+    maven {
+        url = uri("https://cache-redirector.jetbrains.com/www.jetbrains.com/intellij-repository")
+    }
 }
 
 intellij {
-    version.set("2024.2.5")
+    version.set("2023.3.6")
     type.set("IU") // Target IDE Platform - IntelliJ IDEA Ultimate
     plugins.set(listOf("java"))
+    updateSinceUntilBuild.set(false)
 }
 
 tasks {
