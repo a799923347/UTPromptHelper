@@ -6,10 +6,28 @@ build/
 .run/
 .intellijPlatform/
 .tmp/
+
+# Gradle cache directories
 caches/
 daemon/
 notifications/
 native/
+workers/
+jdks/
+kotlin-profile/
+
+# Temporary build directories
+temp-compile/
+temp-final/
+temp-jar/
+temp-update/
+
+# Old version build artifacts
+UTPromptHelper-v2.*/
+!UTPromptHelper-v2.9.0-Latest/
+UTPromptHelper-v2.*.jar
+UTPromptHelper-v2.*.zip
+
 META-INF/
 
 ### IntelliJ IDEA ###
