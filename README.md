@@ -1,8 +1,26 @@
 ## UTPromptHelper - IntelliJ IDEA 插件
 
+> 基于 Git 变更，一键生成“单元测试提示词”的 IntelliJ 插件。
+
+![Build](https://img.shields.io/badge/Gradle-8.1-02303A?logo=gradle) ![JDK](https://img.shields.io/badge/JDK-21-007396?logo=java) ![IDEA](https://img.shields.io/badge/IntelliJ-2024.2+-000000?logo=intellijidea)
+
+— 让 UT 生成更简单、更高效。
+
 ### 简介
 
 UTPromptHelper 是一个 IntelliJ IDEA 插件，用于基于 Git 变更自动生成“单元测试提示词”。插件通过对比当前分支与 `master` 的差异，过滤无效变更（导入、包声明、空白、注释、纯“注释化代码”变更），生成结构化的提示词，帮助快速编写高质量单元测试。
+
+### 目录
+
+- [主要功能](#主要功能)
+- [安装](#安装)
+- [使用指南](#使用指南)
+- [页面样式与交互细节](#页面样式与交互细节)
+- [系统与构建要求](#系统与构建要求)
+- [故障排除（FAQ）](#故障排除faq)
+- [开发](#开发)
+- [许可证](#许可证)
+- [更新日志（摘）](#更新日志摘)
 
 ### 主要功能
 
@@ -41,6 +59,8 @@ open build/distributions
 ```
 org.gradle.java.home=/Users/zhaobaowen/Library/Java/JavaVirtualMachines/azul-21.0.8/Contents/Home
 ```
+
+> 提示：首次使用前，建议将项目切换到当前分支，确保与 `master` 的差异准确。
 
 ### 使用指南
 
