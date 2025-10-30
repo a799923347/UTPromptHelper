@@ -16,21 +16,58 @@ public class UTPromptToolWindowFactory implements ToolWindowFactory {
 
     @Override
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        JPanel mainPanel = new JPanel(new BorderLayout());
 
-        JPanel buttonRow1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        // Header 区域：标题 + 说明
+        JPanel header = new JPanel();
+        header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
+        header.setBorder(BorderFactory.createEmptyBorder(8, 12, 8, 12));
+        JLabel title = new JLabel("UT 提示词");
+        title.setFont(title.getFont().deriveFont(Font.BOLD, title.getFont().getSize() + 1));
+        JLabel subtitle = new JLabel("基于 Git 变更生成 UT 提示词，支持全局与当前文件。");
+        subtitle.setForeground(new Color(110, 110, 110));
+        header.add(title);
+        header.add(Box.createVerticalStrut(4));
+        header.add(subtitle);
+
+        // Content 区域：操作按钮分组
+        JPanel content = new JPanel();
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+        content.setBorder(BorderFactory.createEmptyBorder(8, 12, 12, 12));
+
+        // 全局操作块
+        JPanel globalBlock = new JPanel();
+        globalBlock.setLayout(new BoxLayout(globalBlock, BoxLayout.Y_AXIS));
+        globalBlock.setBorder(BorderFactory.createTitledBorder("全局"));
         JButton globalBtn = new JButton("获取UT提示词（全局）");
-        buttonRow1.add(globalBtn);
+        globalBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
+        globalBlock.add(globalBtn);
+        JLabel globalHint = new JLabel("比较当前分支与 master，扫描非测试 Java 文件。");
+        globalHint.setForeground(new Color(110, 110, 110));
+        globalHint.setAlignmentX(Component.LEFT_ALIGNMENT);
+        globalBlock.add(Box.createVerticalStrut(4));
+        globalBlock.add(globalHint);
 
-        JPanel buttonRow2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        // 当前文件操作块
+        JPanel fileBlock = new JPanel();
+        fileBlock.setLayout(new BoxLayout(fileBlock, BoxLayout.Y_AXIS));
+        fileBlock.setBorder(BorderFactory.createTitledBorder("当前文件"));
         JButton currentFileBtn = new JButton("生成UT提示词（当前文件）");
-        buttonRow2.add(currentFileBtn);
+        currentFileBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
+        fileBlock.add(currentFileBtn);
+        JLabel fileHint = new JLabel("分析编辑器选中文件与 master 的差异。");
+        fileHint.setForeground(new Color(110, 110, 110));
+        fileHint.setAlignmentX(Component.LEFT_ALIGNMENT);
+        fileBlock.add(Box.createVerticalStrut(4));
+        fileBlock.add(fileHint);
 
-        panel.add(Box.createVerticalStrut(8));
-        panel.add(buttonRow1);
-        panel.add(buttonRow2);
-        panel.add(Box.createVerticalGlue());
+        content.add(globalBlock);
+        content.add(Box.createVerticalStrut(12));
+        content.add(fileBlock);
+
+        // 将 header 与 content 放入主面板
+        mainPanel.add(header, BorderLayout.NORTH);
+        mainPanel.add(content, BorderLayout.CENTER);
 
         // 绑定全局按钮到现有动作 GitCompareAction
         globalBtn.addActionListener(e -> {
@@ -62,8 +99,8 @@ public class UTPromptToolWindowFactory implements ToolWindowFactory {
         });
 
         ContentFactory contentFactory = ContentFactory.getInstance();
-        Content content = contentFactory.createContent(panel, "UT 提示词", false);
-        toolWindow.getContentManager().addContent(content);
+        Content twContent = contentFactory.createContent(mainPanel, "UT 提示词", false);
+        toolWindow.getContentManager().addContent(twContent);
     }
 }
 
