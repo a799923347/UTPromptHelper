@@ -58,7 +58,11 @@
   <!-- Extension points defined by the plugin.
        Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
   <extensions defaultExtensionNs="com.intellij">
-
+    <toolWindow id="UTPrompt"
+                anchor="right"
+                icon="/META-INF/pluginIcon.svg"
+                factoryClass="com.ut.prompt.utprompthelper.UTPromptToolWindowFactory"
+                stripeTitle="UTPrompt"/>
   </extensions>
 
   <actions>
