@@ -135,6 +135,10 @@ public class FileBasedPromptAction extends AnAction {
     }
 
     private void processHunk(String fileName, int hunkStart, int hunkLinesCount, List<String> hunkLines, Map<String, List<String>> fileChanges) {
+        if (isCommentedOutChange(hunkLines)) {
+            return;
+        }
+
         // 检查hunk中是否包含重要的代码变更
         boolean hasSignificantChanges = false;
         int significantLines = 0;
@@ -180,6 +184,96 @@ public class FileBasedPromptAction extends AnAction {
         }
         
         return false;
+    }
+
+    private boolean isCommentedOutChange(List<String> hunkLines) {
+        List<String> removedLines = new ArrayList<>();
+        List<String> addedCommentLines = new ArrayList<>();
+
+        for (String line : hunkLines) {
+            if (line.startsWith("-")) {
+                String content = line.substring(1);
+                if (!content.trim().isEmpty()) {
+                    removedLines.add(content);
+                }
+            } else if (line.startsWith("+")) {
+                String content = line.substring(1);
+                if (!isImportOrComment(content)) {
+                    return false;
+                }
+                addedCommentLines.add(content);
+            }
+        }
+
+        if (removedLines.isEmpty() || addedCommentLines.isEmpty()) {
+            return false;
+        }
+
+        List<String> normalizedComments = new ArrayList<>();
+        for (String comment : addedCommentLines) {
+            normalizedComments.add(normalizeForComparison(normalizeCommentContent(comment)));
+        }
+
+        List<String> availableComments = new ArrayList<>(normalizedComments);
+        for (String removed : removedLines) {
+            String normalizedRemoved = normalizeForComparison(removed.trim());
+            if (normalizedRemoved.isEmpty()) {
+                continue;
+            }
+
+            boolean matched = false;
+            for (int i = 0; i < availableComments.size(); i++) {
+                String comment = availableComments.get(i);
+                if (comment.equals(normalizedRemoved)) {
+                    availableComments.remove(i);
+                    matched = true;
+                    break;
+                }
+            }
+
+            if (!matched) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private String normalizeCommentContent(String content) {
+        String trimmed = content.trim();
+
+        if (trimmed.startsWith("//")) {
+            trimmed = trimmed.substring(2).trim();
+        }
+
+        if (trimmed.startsWith("/*")) {
+            trimmed = trimmed.substring(2).trim();
+        }
+
+        if (trimmed.startsWith("*")) {
+            trimmed = trimmed.substring(1).trim();
+        }
+
+        if (trimmed.endsWith("*/")) {
+            trimmed = trimmed.substring(0, trimmed.length() - 2).trim();
+        }
+
+        return trimmed;
+    }
+
+    private String normalizeForComparison(String content) {
+        if (content.isEmpty()) {
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder(content.length());
+        for (int i = 0; i < content.length(); i++) {
+            char ch = content.charAt(i);
+            if (!Character.isWhitespace(ch)) {
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
     }
 
     private void showError(Project project, String message) {
